@@ -22,7 +22,6 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; /*  */
 }
 
-/* CONTINUE FROM HERE */
 .input-container {
   min-width: 300px;
   background-color: #edeef0;
@@ -36,6 +35,7 @@
 
 .input-container input {
   padding: 20px;
+  min-width: 400px;
   background: transparent;
   border: none;
   outline: none;
@@ -63,7 +63,7 @@
   position: relative;
 }
 
-.tasks li::before {
+.tasks li span.unchecked::before {
   content: "";
   position: absolute;
   width: 28px;
@@ -74,4 +74,33 @@
   background-position: center;
   top: 12px;
   left: 8px;
+}
+
+/* CONTINUE HERE */
+.tasks li span.checked {
+  color: #555;
+  text-decoration: line-through;
+}
+
+.tasks li span.checked::before {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  top: 12px;
+  left: 8px;
+  background-image: url(/checked.png);
+}
+
+.tasks li span.delete {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  font-size: 22px;
+  color: red;
+  right: 0;
 }
