@@ -1,35 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import toast from "react-hot-toast";
 
 function App() {
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [taskComplete, setTaskComplete] = useState(false);
+  const [loaded, setLoaded] = useState(false); // flag to track if tasks have loaded from local storage
 
-  const toggleTask = () => {
-    setTaskComplete(!taskComplete);
+  useEffect(() => {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks-react")) || [];
+    setTasks(savedTasks);
+    setLoaded(true); // set loaded to true after loading tasks from local storage
+  }, []);
+
+  useEffect(() => {
+    if (loaded) { // only save to localStorage if loaded is true
+      localStorage.setItem("tasks-react", JSON.stringify(tasks));
+    }
+  }, [tasks, loaded]);
+
+  // 1.
+  const handleInputChange = (e) => {
+    setNewTask(e.target.value);
   };
 
+  // 2.
+  const addTask = (event) => {
+    event.preventDefault();
+    if (newTask.trim() === "") {
+      toast.error("Please enter a task!");
+    } else {
+      setTasks([...tasks, { text: newTask, completed: false }]);
+      setNewTask("");
+    }
+  };
+
+  // 3.
+  const toggleTask = (index) => {
+    const updatedTasks = tasks.map((task, i) =>
+      i === index ? { ...task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
+  };
+
+  // 4.
   const removeTask = (index) => {
     const updatedTasks = tasks.filter((_, i) => i !== index);
     setTasks(updatedTasks);
   };
-
-  const addTask = (event) => {
-    event.preventDefault();
-    if (newTask.trim() !== "") {
-      setTasks([...tasks, newTask]);
-      setNewTask("");
-    }
-    if (newTask.trim() == "") {
-      alert("enter a task!");
-    }
-  };
-
-  /* const checkedStyle = {
-    color: "#555",
-    textDecoration: "line-through"
-  } */
 
   console.log(tasks);
 
@@ -42,7 +60,8 @@ function App() {
           <input
             type="text"
             placeholder="enter your tasks"
-            onChange={(e) => setNewTask(e.target.value)}
+            value={newTask}
+            onChange={handleInputChange}
           />
           <button type="submit">add</button>
         </form>
@@ -51,10 +70,10 @@ function App() {
           {tasks.map((task, index) => (
             <li key={index}>
               <span
-                className={!taskComplete? "unchecked" : "checked"}
-                onClick={toggleTask}
+                className={task.completed ? "checked" : "unchecked"}
+                onClick={() => toggleTask(index)}
               >
-                {task}
+                {task.text}
               </span>{" "}
               <span onClick={() => removeTask(index)} className="delete">
                 {"\u00d7"}
