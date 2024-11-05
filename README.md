@@ -32,5 +32,5 @@ I built this project to get back into the basics of react, and refamiliarise mys
   The issue was that "tasks" was initially an empty array, which was saved to localStorage before loading the stored data, thus overwriting it. The loaded flag i used prevents this by ensuring localStorage is only updated _after_ the data has loaded.
 
 ## Application:
-
+https://to-do-shukri.netlify.app/
 ![alt text](image.png)
